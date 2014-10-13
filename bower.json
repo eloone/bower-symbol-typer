@@ -1,0 +1,23 @@
+{
+  "name": "symbol-typer",
+  "version": "0.1.0",
+  "authors": [
+    "Elodie Rafalimanana (https://github.com/eloone)"
+  ],
+  "description": "Javascript library that lets you type symbols by replacing patterns you define",
+  "main": "symbolTyper.js",
+  "keywords": [
+    "symbols",
+    "icon",
+    "font"
+  ],
+  "license": "BSD",
+  "homepage": "https://github.com/eloone/symbol-typer",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
