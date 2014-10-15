@@ -1,7 +1,7 @@
 /*
-Elodie Rafalimanana Copyright 2014 - BSD License 
+Elodie Rafalimanana Copyright 2014 - BSD License
 I dedicate this script to the fans of the Wingdings font, something to reminisce about our childhood.
-symbolTyper - v0.1.0 - 2014-06-05
+symbolTyper - v0.1.1 - 2014-10-15
 */
 /* src/wrappers/header.js begins : */
 (function(window){
@@ -23,7 +23,7 @@ isContentEditable : function isContentEditable(HTMLElt){
 	if(HTMLElt.tagName == 'INPUT' || HTMLElt.tagName == 'TEXTAREA'){
 		return false;
 	}
-	
+
 	return true;
 },
 
@@ -56,7 +56,7 @@ convertToText : function convertToText(html){
 IEFix : function IEFix(){
 	if(typeof String.prototype.trim !== 'function') {
 	  String.prototype.trim = function() {
-	    return this.replace(/^\s+|\s+$/g, ''); 
+	    return this.replace(/^\s+|\s+$/g, '');
 	  }
 	}
 },
@@ -93,7 +93,7 @@ clone : function clone(obj){
 				}else{
 					newObj[k][i] = obj[k][i];
 				}
-				
+
 			}
 		}
 
@@ -130,7 +130,7 @@ function Symbol(symbol, target, key){
 
 	symbol.encoded = encodeURIComponent(utils.htmlTrim(symbol.htmlSymbol));
 
-	symbol.before = formatSeparator(symbol.before, target);		
+	symbol.before = formatSeparator(symbol.before, target);
 
 	symbol.after = formatSeparator(symbol.after, target);
 
@@ -153,7 +153,7 @@ function formatSeparator(separator, target){
 		}
 	}
 
-	return separator;	
+	return separator;
 }
 
 Symbol.prototype = {
@@ -181,7 +181,7 @@ Symbol.prototype = {
 	},
 	//optional : limit, before, after
 	validateOptionalKeys : function validateOptionalKeys(symbol, key){
-		
+
 		var replacedRegex = new RegExp(symbol.pattern, 'g');
 
 		if(symbol.limit && typeof symbol.limit !== 'number'){
@@ -242,18 +242,18 @@ Support : IE9+ and html5 browsers
 (function(window){
 
 	var supported;
-	
+
 	if(window.addEventListener){
 		window.addEventListener('load', init);
 	}
-	
+
 	if(window.attachEvent){
 		window.attachEvent('onload', init);
 	}
-	
+
 	function init(){
 		supported = typeof (window.getSelection && document.createRange) !== 'undefined';//Modern Browsers and IE9+
-		
+
 		if(supported === false){
 			throwError('This browser is not supported. This script only supports HTML5 browsers and Internet Explorer 9 and above.');
 		}
@@ -284,7 +284,7 @@ Support : IE9+ and html5 browsers
 	function Caret(){}
 
 	Caret.prototype = {
-	
+
 		getPosition : function(target){
 			this.target = new Target(target);
 
@@ -296,9 +296,9 @@ Support : IE9+ and html5 browsers
 				return _getPositionContentEditable.call(this);
 			}else{
 				return _getPositionInputTextArea.call(this);
-			}		
+			}
 		},
-	
+
 		setPosition : function(pos, endContainer){
 			if(pos && !endContainer){
 				throwError('Argument 2 "'+endContainer+'" is invalid. It must be the HTML Element where to position the caret or a PositionPath.');
@@ -338,7 +338,7 @@ function _getPositionContentEditable(){
 
 function _getPositionInputTextArea(){
 	this.target.node.focus();
-	
+
 	return {
 		value : this.target.node.selectionStart,
 		path : new PositionPath(this.target.node, this.target.node),
@@ -354,16 +354,16 @@ function _getPositionInputTextArea(){
 function _setPositionElement(pos){
 	//endContainer should be a textNode or an element containing a textNode
 	var endContainer = this.target.node;
-	
+
 	if(!this.target.isText()){
-		endContainer = this.target.node.firstChild;	
+		endContainer = this.target.node.firstChild;
 	}
 
 	if(endContainer.nodeType != 3){
 		throwError('The endContainer you specified to position the caret should be a textNode or an Element containing a textNode as first child.');
 	}
 
-	//this is for IE because it considers blank spaces &nbsp; and symbols inserted as separate textNodes 
+	//this is for IE because it considers blank spaces &nbsp; and symbols inserted as separate textNodes
 	//therefore the position path technique doesn't map the position of the endContainer originally containing the caret
 	//after you insert symbols or spaces new nodes appear  and the position path is not the same anymore
 	//so you need to position the caret in those new nodes going from the original node where you wanted to position it
@@ -388,11 +388,11 @@ function _setPositionElement(pos){
     selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-     
+
 }
 
 function _setPositionInputTextArea(pos){
-	this.target.node.setSelectionRange(pos, pos);	
+	this.target.node.setSelectionRange(pos, pos);
 }
 
 //utils functions
@@ -495,11 +495,11 @@ function Target(elt, symbols){
 		var newText = text;
 
 		var plainText = utils.convertToText(text);
-	
+
 		var pattern = '([^\\\\]|^)'+'('+symbol.pattern+')';
 
 		var regexp = new RegExp(pattern);
- 
+
 		var replacedMatched = regexp.exec(newText);
 
 		symbol.typed = '';
@@ -521,7 +521,7 @@ function Target(elt, symbols){
 				count = this.getSymbolCount(symbol, newText);
 				symbol.matched = true;
 			}
-			
+
 		}else{
 			symbol.matched = regexp.test(newText);
 			newText = newText.replace(regexp, '$1'+symbol.inserted);
@@ -547,7 +547,7 @@ function Target(elt, symbols){
 
 		return res;
 	};
-	
+
 	//gets the count of symbols, and text entered in target
 	this.getStatus = function getStatus(){
 		var text = this.getValue();
@@ -558,12 +558,12 @@ function Target(elt, symbols){
 		for(var key in _symbols){
 			var symbol = _symbols[key];
 			var symbolPattern = '('+symbol.encoded+')';
-			var escapedPattern = '(\\\\)('+symbol.pattern+')';	
+			var escapedPattern = '(\\\\)('+symbol.pattern+')';
 			var regexpEscaped = new RegExp(escapedPattern, 'g');
 			var regexpSymbol = new RegExp(symbolPattern, 'g');
 
 			res.count[key] = utils.getCountChar(symbol.encoded, rawEncodedHtml);
-			
+
 			rawEncodedHtml = rawEncodedHtml.replace(regexpSymbol, '');
 
 			resText = utils.htmlTrim(decodeURIComponent(rawEncodedHtml));
@@ -572,14 +572,14 @@ function Target(elt, symbols){
 
 			rawEncodedHtml = encodeURIComponent(resText);
 		}
-		
+
 		res.rawText = utils.convertToText(resText);
 		res.fullText = utils.convertToText(text);
 		res.targetId = this.node.id;
 
 		return res;
 	};
-	
+
 	this.setValue = function setValue(text){
 		//this gets executed only when a symbol was matched and needs to be inserted
 		var caretPos = _caret.getPosition(_HTMLElt);
@@ -592,7 +592,7 @@ function Target(elt, symbols){
 
 		if(this.isContentEditable){
 			_HTMLElt.innerHTML = text;
-		}else{	
+		}else{
 			_HTMLElt.value = text;
 		}
 
@@ -606,9 +606,9 @@ function Target(elt, symbols){
 			return _HTMLElt.value;
 		}
 	};
-			
-	this.isContentEditable = utils.isContentEditable(_HTMLElt);	
-	
+
+	this.isContentEditable = utils.isContentEditable(_HTMLElt);
+
 }
 /* src/target.js ends. */
 
@@ -618,7 +618,7 @@ function Typer(HTMLElt, symbols, onTyped){
 	var _typer = this;
 	var _filterKeyDown = false;
 	var _IE = false;
-	
+
 	//symbols are cloned per instance to avoid mixing objects between instances since object are only references
 	_typer.symbols = utils.clone(symbols);
 
@@ -632,6 +632,10 @@ function Typer(HTMLElt, symbols, onTyped){
 		return _target.getStatus();
 	};
 
+	this.renderSymbols = function(){
+		_target.insertSymbols();
+	};
+
 	function enableSymbols(HTMLElt){
 
 		initSymbols(HTMLElt);
@@ -641,15 +645,15 @@ function Typer(HTMLElt, symbols, onTyped){
 
 			HTMLElt.addEventListener('keydown', onKeydown);
 		}
-		
+
 		if(HTMLElt.attachEvent){
 			_IE = true;
-			
+
 			HTMLElt.attachEvent('onkeyup', onKeyup);
 
 			HTMLElt.attachEvent('onkeydown', onKeydown);
 		}
-		
+
 	}
 
 	function initSymbols(target){
@@ -666,7 +670,7 @@ function Typer(HTMLElt, symbols, onTyped){
 		//enter/left/right
 	    var forbidden = [13, 39, 37];
 	    var forbiddenKey = false;
-	    
+
 	    for(var i = 0; i < forbidden.length; i++){
 	    	if(forbidden[i] == event.keyCode){
 	    		forbiddenKey = true;
@@ -683,7 +687,7 @@ function Typer(HTMLElt, symbols, onTyped){
 			if(_filterKeyDown){
 				return;
 			}
-			
+
 			var targetElt = _IE ? event.srcElement : event.target;
 
 			if(targetElt !== _target.node){
@@ -723,7 +727,7 @@ function symbolTyper(HTMLElt, symbols, onTyped){
 		if(typeof HTMLElt == 'undefined'){
 			utils.throwError('Argument 1 is missing. It must be an HTML Element or a collection (array or NodeList) of HTML elements.');
 		}
-	
+
 		if(typeof symbols !== 'object'){
 			utils.throwError('Argument 2 is missing. It should be an object of symbols like {hearts : {unicode : "&#xf0e7;", replaced: "*"}}.');
 		}
@@ -734,7 +738,7 @@ function symbolTyper(HTMLElt, symbols, onTyped){
 			elements = HTMLElt;
 		}
 
-		var res = {}, i = 0;	
+		var res = {}, i = 0;
 
 		do{
 			utils.checkHtmlElt(elements[i], i);
@@ -753,7 +757,7 @@ function symbolTyper(HTMLElt, symbols, onTyped){
 			}
 		}
 
-		return res;	
+		return res;
 
 	}catch(e){
 		//this will display known errors that prevent the library from working but doesn't block the other existing scripts
